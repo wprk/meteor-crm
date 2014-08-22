@@ -1,0 +1,12 @@
+{
+  "packages": {
+    "less-bootstrap-3": {},
+    "less-fontawesome-4": {},
+    "iron-router": {},
+    "x-editable-bootstrap": {},
+    "kadira": {},
+    "bootstrap-errors": {},
+    "fullcalendar": {},
+    "fullcalendar-2": {}
+  }
+}

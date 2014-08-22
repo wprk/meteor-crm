@@ -1,0 +1,12 @@
+<template name="fullLayout">
+  {{> header}}
+  <!-- Start of Blank Template -->
+  <div class="container-fluid">
+    {{> meteorErrors}}
+    <div class="row">
+      <div id="content" class="col-sm-12 full">
+        {{> yield}}
+      </div>	
+    </div><!--/row-->		
+  </div><!--/container-->
+</template>

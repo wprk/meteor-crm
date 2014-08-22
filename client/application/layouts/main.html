@@ -1,0 +1,13 @@
+<template name="sidebarlayout">
+  {{> header}}
+  <!-- Start of Main Template -->
+  <div class="container-fluid">
+    {{> meteorErrors}}
+    <div class="row">
+      {{> yield 'sidebarLeft'}}
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      {{> yield}}
+	  </div>
+    </div><!--/row-->	
+  </div><!--/container-->
+</template>
