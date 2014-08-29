@@ -8,8 +8,8 @@ Meteor.startup(function () {
       });
       ServiceConfiguration.configurations.insert({
         "service" : "google",
-        "clientId" : "181059737409-5cfcr237ab8flcbgeq0d0kesp701m7uk.apps.googleusercontent.com",
-        "secret" : "20Rj2qOgSbcQF69qVOPxrFsA"
+        "clientId" : "794125023120-eq0c9s9hhp7rbr1sjv34fr5inkf9dac8.apps.googleusercontent.com",
+        "secret" : "VJfBmq4WVfhDjboeS9OqrE3e"
       });
       ServiceConfiguration.configurations.remove({
         service: "github"
@@ -25,8 +25,8 @@ Meteor.startup(function () {
       });
       ServiceConfiguration.configurations.insert({
         "service" : "google",
-        "clientId" : "181059737409-4ljduubsrrimbifgcbhj1ti93l6600ai.apps.googleusercontent.com",
-        "secret" : "7W5D5pbsh7euajSJRaw3mWhM"
+        "clientId" : "794125023120-pc0v6eouongba6ka8q9gf0qr1sd7hi8s.apps.googleusercontent.com",
+        "secret" : "_C7Onr-GDVOLif5SeUrn5azS"
       });
       ServiceConfiguration.configurations.remove({
         service: "github"
