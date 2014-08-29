@@ -1,13 +1,16 @@
-Session.setDefault('lastMod', new Date());
+Session.setDefault('lastSync', null);
+Session.setDefault('showEditModal', false);
+Session.setDefault('editEvent', null);
 
 Template.calendar.rendered = function() {
 	$('#bookingsCalendar').fullCalendar({
-		'defaultView': 'month',
+		'defaultView': 'agendaWeek',
 		'weekMode': 'liquid',
 		'minTime': '08:00:00',
 		'maxTime': '20:00:00',
 		'firstDay': 1,
 		'hiddenDays': [7],
+		'slotDuration': '00:15:00',
 		'header': {
 			left:   'title',
 			center: '',
@@ -15,7 +18,6 @@ Template.calendar.rendered = function() {
 		},
 		'allDayText': 'Staff Availability',
 		'allDayDefault': false,
-		'lazyFetching': false,
 		dayClick: function( date, jsEvent, view) {
 			var calEvent = null;
 			switch(view.name) {
@@ -23,7 +25,7 @@ Template.calendar.rendered = function() {
 					calEvent = {
 						title: "New Event",
 						start: date.format(),
-						allDay: false
+						allDay: true
 					}
 				break;
 				case "agendaDay":
@@ -36,10 +38,11 @@ Template.calendar.rendered = function() {
 				break;
 			}
 			Events.insert(calEvent);
-			Session.set('lastMod', new Date());
+			Session.set('lastSync', new Date());
 		},
 		eventClick: function( calEvent, jsEvent, view) {
-			console.log(calEvent);
+			Session.set('editEvent', calEvent.id);
+			Session.set('showEditModal', true);
 		},
 		events: function(start, end, timezone, callback) {
 			var events = [];
@@ -58,6 +61,14 @@ Template.calendar.rendered = function() {
 	});
 }
 
-Template.calendar.lastMod = function() {
-	return Session.get('lastMod');
+Template.calendar.showEditModal = function() {
+	return Session.get('showEditModal');
+}
+
+Template.eventModal.calEvent = function() {
+	return Events.findOne({_id: Session.get('editEvent')});
+}
+
+Template.calendar.lastSync = function() {
+	return Session.get('lastSync');
 }
