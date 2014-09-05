@@ -1,5 +1,9 @@
 Session.setDefault('lastSync', null);
+Session.setDefault('staffMember', null);
+Session.setDefault('showStaffMemberModal', false);
+Session.setDefault('pendingCalEvent', false);
 Session.setDefault('showEditModal', false);
+Session.setDefault('showDeleteModal', false);
 Session.setDefault('editEvent', null);
 
 Template.calendar.rendered = function() {
@@ -18,6 +22,7 @@ Template.calendar.rendered = function() {
 		},
 		'allDayText': 'Staff Availability',
 		'allDayDefault': false,
+		'editable': true,
 		dayClick: function( date, jsEvent, view) {
 			var calEvent = null;
 			switch(view.name) {
@@ -37,12 +42,31 @@ Template.calendar.rendered = function() {
 					}
 				break;
 			}
-			Events.insert(calEvent);
-			Session.set('lastSync', new Date());
+			if (Session.get('staffMember') == null) {
+				Session.set('pendingCalEvent', calEvent);
+				Session.set('showStaffMemberModal', true);
+			} else {
+				addCalEvent(calEvent, Session.get('staffMember'));
+			}
 		},
 		eventClick: function( calEvent, jsEvent, view) {
 			Session.set('editEvent', calEvent.id);
 			Session.set('showEditModal', true);
+		},
+		eventDrop: function(calEvent) {
+			console.log(calEvent);
+			if (calEvent.allDay)
+			{
+				var eventTimes = {
+					start: calEvent._tart.format()
+				};
+			} else {
+				var eventTimes = {
+					start: calEvent.start.format(),
+					end: calEvent.end.format()
+				};
+			}
+			Events.update(calEvent.id, {$set: eventTimes});
 		},
 		events: function(start, end, timezone, callback) {
 			var events = [];
@@ -59,16 +83,92 @@ Template.calendar.rendered = function() {
 			callback(events);
 		}
 	});
+
+	Meteor.autorun(function() {
+		var calendarEvents = Events.find();
+		$('#bookingsCalendar').fullCalendar('refetchEvents');
+	});
+}
+
+var addCalEvent = function(calEvent, staffMember) {
+	calEvent[staffMember] = staffMember;
+	Events.insert(calEvent);
+	Session.set('lastSync', new Date());
+}
+
+var updateCalEvent = function(id, title) {
+	Events.update(id, {$set: {title: title}});
+	return true;
+}
+
+var deleteCalEvent = function(id) {
+	Events.remove(id);
+	return true;
+}
+
+Template.calendar.showStaffMemberModal = function() {
+	return Session.get('showStaffMemberModal');
 }
 
 Template.calendar.showEditModal = function() {
 	return Session.get('showEditModal');
 }
 
-Template.eventModal.calEvent = function() {
-	return Events.findOne({_id: Session.get('editEvent')});
+Template.calendar.showDeleteModal = function() {
+	return Session.get('showDeleteModal');
 }
 
 Template.calendar.lastSync = function() {
 	return Session.get('lastSync');
 }
+
+Template.staffMemberModal.events({
+	'click .save': function(evt, tmpl) {
+		var staffMember = tmpl.find('#staffMember').value;
+		addCalEvent(Session.get('pendingCalEvent'), staffMember);
+		Session.set('staffMember', staffMember);
+		Session.set('showStaffMemberModal', false);
+	},
+	'click [data-dismiss="modal"]': function(evt, tmpl) {
+		Session.set('showStaffMemberModal', false);
+		Session.set('pendingCalEvent', null);
+	}
+});
+
+Template.editEventModal.calEvent = function() {
+	var calEvent = Events.findOne({_id: Session.get('editEvent')});
+	return calEvent;
+}
+
+Template.editEventModal.events({
+	'click .save': function(evt, tmpl) {
+		updateCalEvent(Session.get('editEvent'), tmpl.find('#eventTitle').value);
+		Session.set('showEditModal', false);
+		Session.set('editEvent', null);
+	},
+	'click [data-dismiss="modal"]': function(evt, tmpl) {
+		Session.set('showEditModal', false);
+		Session.set('editEvent', null);
+	},
+	'click .delete': function(evt, tmpl) {
+		Session.set('showEditModal', false);
+		Session.set('showDeleteModal', true);
+	}
+});
+
+Template.deleteEventModal.calEvent = function() {
+	var calEvent = Events.findOne({_id: Session.get('editEvent')});
+	return calEvent;
+}
+
+Template.deleteEventModal.events({
+	'click [data-dismiss="modal"]': function(evt, tmpl) {
+		Session.set('showDeleteModal', false);
+		Session.set('EditEvent', null);
+	},
+	'click .delete': function(evt, tmpl) {
+		deleteCalEvent(Session.get('editEvent'));
+		Session.set('showDeleteModal', false);
+		Session.set('editEvent', null);
+	}
+});

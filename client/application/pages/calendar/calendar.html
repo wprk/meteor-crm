@@ -1,14 +1,20 @@
 <template name="calendar">
+	{{#if showStaffMemberModal}}
+		{{> staffMemberModal}}
+	{{/if}}
 	{{#if showEditModal}}
-		{{> eventModal}}
+		{{> editEventModal}}
+	{{/if}}
+	{{#if showDeleteModal}}
+		{{> deleteEventModal}}
 	{{/if}}
 	<span id="lastSync" class="pull-right">Last Synced:<abbr class="timeago" title="{{lastSync}}">{{lastSync}}</abbr></span>
 	<h1>Calendar</h1>
 	<div id="bookingsCalendar"></div>
 </template>
 
-<template name="eventModal">
-	<div class="modal">
+<template name="editEventModal">
+	<div id="eventEventModal" class="modal show fade in">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -16,11 +22,57 @@
 					<h4 class="modal-title">Edit Event: {{calEvent.title}}</h4>
 				</div>
 				<div class="modal-body">
-					<p>One fine body&hellip;</p>
+					<p>The form will go here...</p>
+					<input type="text" name="title" id="eventTitle" value="{{calEvent.title}}" />
+					<input type="text" name="title" value="{{calEvent.title}}" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-left delete">Delete Event</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary save">Save Event</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</template>
+
+<template name="deleteEventModal">
+	<div id="deleteEventModal" class="modal show fade in">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Delete Event: {{calEvent.title}}</h4>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you wish to delete {{calEvent.title}} from {{calEvent.staff_member}}'s calendar?</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save Event</button>
+					<button type="button" class="btn btn-danger delete">Delete Event</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</template>
+
+<template name="staffMemberModal">
+	<div id="staffMemberModal" class="modal show fade in">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Which staff member will attend this event?</h4>
+				</div>
+				<div class="modal-body">
+					<select id="staffMember" name="staff_member">
+						<option value="1">Will Parker</option>
+						<option value="2">Matt Parker</option>
+					</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger save">Select Staff Member</button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
