@@ -14,7 +14,7 @@
 </template>
 
 <template name="editEventModal">
-	<div id="eventEventModal" class="modal show fade in">
+	<div id="editEventModal" class="modal show fade in">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -24,7 +24,13 @@
 				<div class="modal-body">
 					<p>The form will go here...</p>
 					<input type="text" name="title" id="eventTitle" value="{{calEvent.title}}" />
-					<input type="text" name="title" value="{{calEvent.title}}" />
+					<select id="staffMember" name="staff_member">{{calEvent.staff_member}}
+						<option value="1">Will Parker</option>
+						<option value="2">Matt Parker</option>
+<!-- 						{{#each organisationStaff}}
+							<option {{selected ../calEvent.staff_member}}>{{calEvent.staff_member}}</option>
+						{{/each}} -->
+					</select>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger pull-left delete">Delete Event</button>

@@ -98,25 +98,26 @@ Template.calendar.rendered = function() {
 
 	Meteor.autorun(function() {
 		if (Session.get('showStaffMember')) {
-			var calendarEvents = Events.find({staff_member: Session.get('showStaffMember')});
-			console.log('filtered');
+			var staff_member = Session.get('showStaffMember');
+			var calendarEvents = Events.find(
+				{staff_member: staff_member}
+			);
 		} else {
-			var calendarEvents = Events.find();
-			console.log('non-filtered');
+			// var calendarEvents = Events.find();
 		}
 		$('#bookingsCalendar').fullCalendar('refetchEvents');
-		console.log(Session.get('showStaffMember'));
 	});
 }
 
 var addCalEvent = function(calEvent, staffMember) {
-	calEvent[staffMember] = staffMember;
+	calEvent["staff_member"] = staffMember;
 	Events.insert(calEvent);
 	Session.set('lastSync', new Date());
 }
 
-var updateCalEvent = function(id, title) {
-	Events.update(id, {$set: {title: title}});
+var updateCalEvent = function(id, data) {
+	console.log(data);
+	Events.update(id, {$set: data});
 	return true;
 }
 
@@ -161,7 +162,9 @@ Template.editEventModal.calEvent = function() {
 
 Template.editEventModal.events({
 	'click .save': function(evt, tmpl) {
-		updateCalEvent(Session.get('editEvent'), tmpl.find('#eventTitle').value);
+		var title = tmpl.find('#eventTitle').value;
+		var staff_member = tmpl.find('#staffMember').value;
+		updateCalEvent(Session.get('editEvent'), {title: title, staff_member: staff_member});
 		Session.set('showEditModal', false);
 		Session.set('editEvent', null);
 	},
