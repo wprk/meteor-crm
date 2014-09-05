@@ -1,5 +1,4 @@
 Session.setDefault('lastSync', null);
-Session.setDefault('staffMember', null);
 Session.setDefault('showStaffMemberModal', false);
 Session.setDefault('pendingCalEvent', false);
 Session.setDefault('showEditModal', false);
@@ -42,11 +41,11 @@ Template.calendar.rendered = function() {
 					}
 				break;
 			}
-			if (Session.get('staffMember') == null) {
+			if (Session.get('showStaffMember') == null) {
 				Session.set('pendingCalEvent', calEvent);
 				Session.set('showStaffMemberModal', true);
 			} else {
-				addCalEvent(calEvent, Session.get('staffMember'));
+				addCalEvent(calEvent, Session.get('showStaffMember'));
 			}
 		},
 		eventClick: function( calEvent, jsEvent, view) {
@@ -54,7 +53,20 @@ Template.calendar.rendered = function() {
 			Session.set('showEditModal', true);
 		},
 		eventDrop: function(calEvent) {
-			console.log(calEvent);
+			if (calEvent.allDay)
+			{
+				var eventTimes = {
+					start: calEvent._tart.format()
+				};
+			} else {
+				var eventTimes = {
+					start: calEvent.start.format(),
+					end: calEvent.end.format()
+				};
+			}
+			Events.update(calEvent.id, {$set: eventTimes});
+		},
+		eventResize: function(calEvent) {
 			if (calEvent.allDay)
 			{
 				var eventTimes = {
@@ -85,8 +97,15 @@ Template.calendar.rendered = function() {
 	});
 
 	Meteor.autorun(function() {
-		var calendarEvents = Events.find();
+		if (Session.get('showStaffMember')) {
+			var calendarEvents = Events.find({staff_member: Session.get('showStaffMember')});
+			console.log('filtered');
+		} else {
+			var calendarEvents = Events.find();
+			console.log('non-filtered');
+		}
 		$('#bookingsCalendar').fullCalendar('refetchEvents');
+		console.log(Session.get('showStaffMember'));
 	});
 }
 
@@ -126,8 +145,8 @@ Template.staffMemberModal.events({
 	'click .save': function(evt, tmpl) {
 		var staffMember = tmpl.find('#staffMember').value;
 		addCalEvent(Session.get('pendingCalEvent'), staffMember);
-		Session.set('staffMember', staffMember);
 		Session.set('showStaffMemberModal', false);
+		Router.go('calendar', {staff_member: staffMember});
 	},
 	'click [data-dismiss="modal"]': function(evt, tmpl) {
 		Session.set('showStaffMemberModal', false);
