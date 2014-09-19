@@ -2,12 +2,12 @@
 Meteor.startup(function () {
 	if (Staff.find().count() === 0) {
 		var organisations = [
-			{name: "Computers at Home", status: true}
+			{name: "Test Business", status: true}
 		];
 
 		var staff = [
-			{name: 'Will Parker', status: true},
-			{name: 'Matt Parker', status: true},
+			{name: 'Joe Bloggs', status: true},
+			{name: 'John Doe', status: true},
 		];
 		
 		for (var o = 0; o < organisations.length; o++) {
