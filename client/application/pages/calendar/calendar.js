@@ -82,14 +82,15 @@ Template.calendar.rendered = function() {
 		},
 		events: function(start, end, timezone, callback) {
 			var events = [];
-			calendarEvents = Events.find();
+			var calendarEvents = getEvents();
 			calendarEvents.forEach(function(calEvent) {
 				events.push({
 					id: calEvent._id,
 					title: calEvent.title,
 					allDay: calEvent.allDay,
 					start: calEvent.start,
-					end: calEvent.end
+					end: calEvent.end,
+					staff_member: calEvent.staff_member
 				})
 			});
 			callback(events);
@@ -97,14 +98,6 @@ Template.calendar.rendered = function() {
 	});
 
 	Meteor.autorun(function() {
-		if (Session.get('showStaffMember')) {
-			var staff_member = Session.get('showStaffMember');
-			var calendarEvents = Events.find(
-				{staff_member: staff_member}
-			);
-		} else {
-			// var calendarEvents = Events.find();
-		}
 		$('#bookingsCalendar').fullCalendar('refetchEvents');
 	});
 }
@@ -194,3 +187,28 @@ Template.deleteEventModal.events({
 		Session.set('editEvent', null);
 	}
 });
+
+Template.staffMemberModal.helpers({
+    staffMembers: function(){
+        return Staff.find();
+    }
+});
+
+Template.editEventModal.helpers({
+    staffMembers: function(){
+        return Staff.find();
+    }
+});
+
+function getEvents() {
+	var staffMemberId = Session.get('showStaffMember');
+	var staffMember = Staff.findOne({_id: staffMemberId});
+	if (staffMember) {
+		var calendarEvents = Events.find(
+			{staff_member: staffMember._id}
+		);
+	} else {
+		var calendarEvents = Events.find();
+	}
+	return calendarEvents;
+}

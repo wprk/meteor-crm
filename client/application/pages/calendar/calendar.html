@@ -24,12 +24,10 @@
 				<div class="modal-body">
 					<p>The form will go here...</p>
 					<input type="text" name="title" id="eventTitle" value="{{calEvent.title}}" />
-					<select id="staffMember" name="staff_member">{{calEvent.staff_member}}
-						<option value="1">Will Parker</option>
-						<option value="2">Matt Parker</option>
-<!-- 						{{#each organisationStaff}}
-							<option {{selected ../calEvent.staff_member}}>{{calEvent.staff_member}}</option>
-						{{/each}} -->
+					<select id="staffMember" name="staff_member">
+						{{#each staffMembers}}
+							<option value="{{_id}}">{{name}}</option>
+						{{/each}}
 					</select>
 				</div>
 				<div class="modal-footer">
@@ -72,8 +70,9 @@
 				</div>
 				<div class="modal-body">
 					<select id="staffMember" name="staff_member">
-						<option value="1">Will Parker</option>
-						<option value="2">Matt Parker</option>
+						{{#each staffMembers}}
+							<option value="{{_id}}">{{name}}</option>
+						{{/each}}
 					</select>
 				</div>
 				<div class="modal-footer">

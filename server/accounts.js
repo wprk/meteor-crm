@@ -1,6 +1,14 @@
 Accounts.onCreateUser(function(options, user) {
 	
-	// Get all users google contact data
+	console.log(options);
+	
+	if (user.profile == null) {
+		user.profile = {};
+		user.profile.organisation = Organisations.findOne();
+		if (options.profile != null) {
+			user.profile.name = options.profile.name;
+		}
+	}
 	
 	return user;
 });

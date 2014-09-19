@@ -12,8 +12,18 @@
 
 <template name="sidebarLeftCalendar">
   <div class="col-sm-3 col-md-2 sidebar">
-    // Sidebar content will go here
+    <!-- List of all staff Calendars -->
+    <ul>
+      <li><a href="{{pathFor 'calendar' staff_member=0}}">All Staff Appointments</a></li>
+      {{#each staffMembers}}
+        {{>staffList}}
+      {{/each}}
+    </ul>
   </div>
+</template>
+
+<template name="staffList">
+      <li><a href="{{pathFor 'calendar' staff_member=_id}}">{{name}}</a></li>
 </template>
 
 <template name="sidebarLeftStaff">
