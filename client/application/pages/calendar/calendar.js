@@ -41,7 +41,7 @@ Template.calendar.rendered = function() {
 					}
 				break;
 			}
-			if (Session.get('showStaffMember') == null) {
+			if (Session.get('showStaffMember') == 0) {
 				Session.set('pendingCalEvent', calEvent);
 				Session.set('showStaffMemberModal', true);
 			} else {
