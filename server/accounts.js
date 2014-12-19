@@ -1,7 +1,5 @@
 Accounts.onCreateUser(function(options, user) {
-	
-	console.log(options);
-	
+		
 	if (user.profile == null) {
 		user.profile = {};
 		user.profile.organisation = Organisations.findOne();

@@ -1,3 +1,37 @@
 <template name="staff">
-	<h1>Staff</h1>
+	<h2>Active Staff</h2>
+	<table class="table table-striped">
+		<th>
+			<td colspan="2">Name</td>
+			<td>Email</td>
+			<td>&nbsp;</td>
+		</th>
+		
+		{{#each activeStaffMembers}}
+		<tr>
+			<td><img src="http://placehold.it/30/{{colour}}/{{colour}}" /></td>
+			<td><a href="{{pathFor 'calendar' staff_member=_id}}">{{name}}</a></td>
+			<td>{{email}}</td>
+			<td>&nbsp;</td>
+		</tr>
+		{{/each}}
+	</table>
+	
+	<h2>Archived Staff</h2>
+	<table class="table table-striped">
+		<th>
+			<td colspan="2">Name</td>
+			<td>Email</td>
+			<td>&nbsp;</td>
+		</th>
+		
+		{{#each inactiveStaffMembers}}
+		<tr>
+			<td><img src="http://placehold.it/30/{{colour}}/{{colour}}" /></td>
+			<td><a href="{{pathFor 'calendar' staff_member=_id}}">{{name}}</a></td>
+			<td>{{email}}</td>
+			<td>&nbsp;</td>
+		</tr>
+		{{/each}}
+	</table>
 </template>

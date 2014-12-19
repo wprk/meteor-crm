@@ -1,5 +1,5 @@
 Template.sidebarLeftCalendar.helpers({
     staffMembers: function(){
-        return Staff.find();
+        return Staff.find({status: true});
     }
 });

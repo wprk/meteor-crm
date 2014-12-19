@@ -119,21 +119,31 @@ var deleteCalEvent = function(id) {
 	return true;
 }
 
-Template.calendar.showStaffMemberModal = function() {
-	return Session.get('showStaffMemberModal');
-}
-
-Template.calendar.showEditModal = function() {
-	return Session.get('showEditModal');
-}
-
-Template.calendar.showDeleteModal = function() {
-	return Session.get('showDeleteModal');
-}
-
-Template.calendar.lastSync = function() {
-	return Session.get('lastSync');
-}
+Template.calendar.helpers({
+	calendar: function() {
+		var staffMemberId = Session.get('showStaffMember');
+		var staffMember = Staff.findOne({_id: staffMemberId, status: true});
+		if (staffMember) {
+			return staffMember;
+		} else {
+			return {
+				name: "All Staff Members"
+			};
+		}
+	},
+	showStaffMemberModal: function() {
+		return Session.get('showStaffMemberModal');
+	},
+	showEditModal: function() {
+		return Session.get('showEditModal');
+	},
+	showDeleteModal: function() {
+		return Session.get('showDeleteModal');
+	},
+	lastSync: function() {
+		return Session.get('lastSync');
+	}
+});
 
 Template.staffMemberModal.events({
 	'click .save': function(evt, tmpl) {
@@ -190,13 +200,13 @@ Template.deleteEventModal.events({
 
 Template.staffMemberModal.helpers({
     staffMembers: function(){
-        return Staff.find();
+        return Staff.find({status: true});
     }
 });
 
 Template.editEventModal.helpers({
     staffMembers: function(){
-        return Staff.find();
+        return Staff.find({status: true});
     }
 });
 

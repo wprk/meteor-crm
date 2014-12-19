@@ -6,8 +6,10 @@ Meteor.startup(function () {
 		];
 
 		var staff = [
-			{name: 'Joe Bloggs', status: true},
-			{name: 'John Doe', status: true},
+			{name: 'Joe Bloggs', colour: '333333', status: true},
+			{name: 'John Doe', colour: '666666', status: true},
+			{name: 'Jackie Chan', colour: '999999', status: true},
+			{name: 'Alan Sugar', colour: 'FF0000', status: false},
 		];
 		
 		for (var o = 0; o < organisations.length; o++) {
